@@ -212,10 +212,10 @@
                 android:id="@+id/buttongetotp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/backgroundbutton"
+                android:background="@color/colorAccent"
                 android:text="Submit"
                 android:layout_margin="30dp"
-                android:textColor="@color/colortextfirst"
+                android:textColor="@color/white"
                 android:textStyle="bold" />
 
             <ProgressBar
@@ -231,10 +231,6 @@
 
 
     </LinearLayout>
-
-
-
-
 
 
 
