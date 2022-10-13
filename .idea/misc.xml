@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Vicky/AndroidStudioProjects/scanner/app/src/main/res/drawable/backgroundbox.xml" value="0.2235" />
+        <entry key="..\:/Users/Vicky/AndroidStudioProjects/scanner/app/src/main/res/drawable/backgroundbutton.xml" value="0.2235" />
+        <entry key="..\:/Users/Vicky/AndroidStudioProjects/scanner/app/src/main/res/drawable/ic_launcher_background1.xml" value="0.2235" />
+        <entry key="..\:/Users/Vicky/AndroidStudioProjects/scanner/app/src/main/res/layout/activity_verify_page.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/userscanner/app/src/main/res/drawable-v24/back_ic.xml" value="0.166" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/userscanner/app/src/main/res/drawable-v24/ic_down_1.xml" value="0.166" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/userscanner/app/src/main/res/drawable-v24/pistagreenspinner.xml" value="0.166" />
