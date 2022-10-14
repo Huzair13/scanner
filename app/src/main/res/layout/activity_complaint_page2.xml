@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".complaint_page">
+    tools:context=".complaint_page2">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -103,7 +103,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/sn_unit"
+                    android:id="@+id/sn_unit2"
                     android:layout_width="113dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -141,7 +141,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/make_unit"
+                    android:id="@+id/make_unit2"
                     android:layout_width="113dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -179,7 +179,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/model_unit"
+                    android:id="@+id/model_unit2"
                     android:layout_width="113dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -217,7 +217,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/procurement_unit"
+                    android:id="@+id/procurement_unit2"
                     android:layout_width="113dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -255,7 +255,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/powerRating_unit"
+                    android:id="@+id/powerRating_unit2"
                     android:layout_width="113dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -293,7 +293,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/warranty_unit"
+                    android:id="@+id/warranty_unit2"
                     android:layout_width="113dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -331,7 +331,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/warranty_exp_unit"
+                    android:id="@+id/warranty_exp_unit2"
                     android:layout_width="113dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -369,7 +369,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/ins_date_unit"
+                    android:id="@+id/ins_date_unit2"
                     android:layout_width="113dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -407,7 +407,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/ins_by_unit"
+                    android:id="@+id/ins_by_unit2"
                     android:layout_width="113dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -445,7 +445,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/mob_unit"
+                    android:id="@+id/mob_unit2"
                     android:layout_width="113dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -483,7 +483,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/dep_of_pro_unit"
+                    android:id="@+id/dep_of_pro_unit2"
                     android:layout_width="113dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -521,7 +521,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/scanned_location"
+                    android:id="@+id/scanned_location2"
                     android:layout_width="113dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -537,7 +537,7 @@
             <TableRow>
 
                 <TextView
-                    android:id="@+id/cost1"
+                    android:id="@+id/cost1A"
                     android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -550,7 +550,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/cost2"
+                    android:id="@+id/cost2A"
                     android:visibility="gone"
                     android:layout_width="140dp"
                     android:layout_height="match_parent"
@@ -564,8 +564,7 @@
 
                 <TextView
                     android:visibility="gone"
-
-                    android:id="@+id/cost"
+                    android:id="@+id/costA"
                     android:layout_width="113dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -580,7 +579,7 @@
             <TableRow>
 
                 <TextView
-                    android:id="@+id/config1"
+                    android:id="@+id/config1A"
                     android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -593,7 +592,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/config2"
+                    android:id="@+id/config2A"
                     android:visibility="gone"
                     android:layout_width="140dp"
                     android:layout_height="match_parent"
@@ -607,7 +606,7 @@
 
                 <TextView
                     android:visibility="gone"
-                    android:id="@+id/Config"
+                    android:id="@+id/ConfigA"
                     android:layout_width="113dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -636,22 +635,10 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/verifiedMobSign"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:textStyle="bold"
-                    android:textSize="15dp"
-                    android:visibility="gone"
-                    android:fontFamily="@font/elmessiri"
-                    android:textColor="@color/black"
-                    android:background="@color/blue"
-                    android:text="Verified" />
 
-                <EditText
-                    android:id="@+id/scan_qr_com_mob"
-                    android:layout_width="209dp"
+                <TextView
+                    android:id="@+id/scan_qr_com_mob2"
+                    android:layout_width="231dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/bg01"
@@ -662,27 +649,25 @@
                     android:textColor="@color/black"
                     android:textColorHint="@color/black">
 
-                </EditText>
+                </TextView>
 
-                <Button
-                    android:id="@+id/verifyMobNum"
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/verifiedMobSign2"
+                    android:layout_width="119dp"
                     android:layout_height="50dp"
                     android:layout_gravity="bottom"
-                    android:text="Verify" />
-
-                <ProgressBar
-                    android:id="@+id/progressbarforotp"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_gravity="center"
-                    android:visibility="gone"/>
+                    android:fontFamily="@font/elmessiri"
+                    android:src="@drawable/verified_bg"
+                    android:text="Verified"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
 
             <Spinner
-                android:id="@+id/complaint_Qrcode"
+                android:id="@+id/complaint_Qrcode2"
                 android:layout_width="350dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
@@ -695,7 +680,7 @@
                 android:background="@drawable/pistagreenspinner"/>
 
             <EditText
-                android:id="@+id/others_complaint_qr"
+                android:id="@+id/others_complaint_qr2"
                 android:layout_width="350dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
@@ -722,7 +707,7 @@
 
 
             <LinearLayout
-                android:id="@+id/prioritylayout"
+                android:id="@+id/prioritylayout2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -800,7 +785,7 @@
 
             <!--</LinearLayout>-->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_complaint_submit"
+                android:id="@+id/button_complaint_submit2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

@@ -24,6 +24,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UserScanner">
         <activity
+            android:name=".complaint_page2"
+            android:exported="false" />
+        <activity
             android:name=".verifyPage"
             android:exported="false" />
         <activity

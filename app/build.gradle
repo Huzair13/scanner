@@ -41,6 +41,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:21.0.8'
     implementation 'me.dm7.barcodescanner:zxing:1.9.8'
     implementation 'com.karumi:dexter:6.2.2'
+    implementation 'androidx.browser:browser:1.4.0'
     //implementation 'com.github.1902shubh:SendMail:1.0.0'
 
     testImplementation 'junit:junit:4.13.2'

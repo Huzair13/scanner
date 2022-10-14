@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +23,10 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class complaint_page extends AppCompatActivity {
 
@@ -80,6 +85,8 @@ public class complaint_page extends AppCompatActivity {
 
         uref= FirebaseAuth.getInstance().getUid();
 
+        final ProgressBar progressBar =  findViewById(R.id.progressbarforotp);
+
         sn = (TextView) findViewById(R.id.sn_unit);
         make = (TextView) findViewById(R.id.make_unit);
         model = (TextView) findViewById(R.id.model_unit);
@@ -120,21 +127,72 @@ public class complaint_page extends AppCompatActivity {
         LinearLayout priority = (LinearLayout) findViewById(R.id.prioritylayout);
 
         s = getIntent().getStringExtra("SCAN_RESULT");
-
+        VerifyBool= Boolean.parseBoolean(getIntent().getStringExtra("boolean123"));
+        complainted_by_mob_str=getIntent().getStringExtra("mobile");
 
         String[] com_scan={"Complaint","Not Working","Broken","Leakage","Others"};
         complaint_qrcode.setAdapter(new ArrayAdapter<String>(this, simple_spinner_dropdown_item,com_scan));
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Datas");
 
-        if(VerifyBool){
-            verified_textview.setVisibility(View.VISIBLE);
-        }
+
 
         verify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(VerifyBool){
+                    Toast.makeText(complaint_page.this, "Already verified", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    if (!complainted_by_mob.getText().toString().trim().isEmpty()){
+                        if ((complainted_by_mob.getText().toString().trim()).length() == 10){
+                            progressBar.setVisibility(View.VISIBLE);
+                            verify.setVisibility(View.INVISIBLE);
 
+                            PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                                    "+91" + complainted_by_mob.getText().toString(),
+                                    60,
+                                    TimeUnit.SECONDS,
+                                    complaint_page.this,
+                                    new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+                                        @Override
+                                        public void onVerificationFailed(@NonNull FirebaseException e) {
+                                            progressBar.setVisibility(View.GONE);
+                                            verify.setVisibility(View.VISIBLE);
+                                            Toast.makeText(complaint_page.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onCodeSent(@NonNull String verficationid, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                                            progressBar.setVisibility(View.GONE);
+                                            verify.setVisibility(View.VISIBLE);
+                                            Intent intent = new Intent(getApplicationContext(),verifyPage.class);
+                                            intent.putExtra("mobile",complainted_by_mob.getText().toString());
+                                            intent.putExtra("verfication",verficationid);
+                                            intent.putExtra("scanresult",s);
+                                            intent.putExtra("boolean123",VerifyBool);
+                                            startActivity(intent);
+                                        }
+
+                                        @Override
+                                        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                                            progressBar.setVisibility(View.GONE);
+                                            verify.setVisibility(View.VISIBLE);
+                                        }
+                                    }
+
+                            );
+
+
+
+                        }else {
+                            Toast.makeText(complaint_page.this,"Please enter correct number",Toast.LENGTH_SHORT).show();
+                        }
+                    }else {
+                        Toast.makeText(complaint_page.this,"Enter Mobile number",Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
@@ -234,12 +292,8 @@ public class complaint_page extends AppCompatActivity {
                     complainted_by_mob.setError("Empty");
                     complainted_by_mob.requestFocus();
                 }
-                else if(!VerifyBool){
-                    Toast.makeText(complaint_page.this, "Please verify your mobile number", Toast.LENGTH_SHORT).show();
-                }
                 else{
-                    getReciverEmail();
-                    submitComplaint();
+                    Toast.makeText(complaint_page.this, "Your mobile number is not verified", Toast.LENGTH_SHORT).show();
                 }
 //                else if (vhigh.getText().toString().isEmpty()) {
 //                    vhigh.setError("Empty");
@@ -249,146 +303,157 @@ public class complaint_page extends AppCompatActivity {
 
         });
 
+        VerifyBool= Boolean.parseBoolean(getIntent().getStringExtra("verifyboolean"));
+        if(VerifyBool){
+            verified_textview.setVisibility(View.VISIBLE);
+        }
 
 
 }
-
-    private void submitComplaint() {
-
-        dbRef = FirebaseDatabase.getInstance().getReference().child("complaints").child(dep_of_pro_str);
-        final String uniqueKey = dbRef.push().getKey();
-
-        //complainted_by_name_str = complainted_by_name.getText().toString();
-        complainted_by_mob_str = complainted_by_mob.getText().toString();
-        if(complaint_txt.equals("Others")){
-            complaint_txt=other_com.getText().toString();
-        }
-
-        Calendar calForDate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yy");
-        String date = currentDate.format(calForDate.getTime());
-
-        Calendar calForTime = Calendar.getInstance();
-        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
-        String time = currentTime.format(calForTime.getTime());
-
-
-        Complaint_details complaint_details = new Complaint_details("null", complainted_by_mob_str,
-                "null", complaint_txt, sn_str,
-                make_str, model_str, procurement_str,
-                powerRating_str, wperiod_str, wexpiry_str, ins_by_str, ins_date_str, mob_str, date, time, uniqueKey, s,
-                status,dep_of_pro_str,uref,location_str,rating_str,FeedBack_str);
-
-        //refDash= FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getUid());
-
-
-        dbRef.child(uniqueKey).setValue(complaint_details).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                //sendemail();
-                Toast.makeText(complaint_page.this, "Complaint Registered Successfully", Toast.LENGTH_SHORT).show();
-                refDash.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Intent intent=new Intent(complaint_page.this, ScannerPage.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(complaint_page.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+    public void onBackPressed() {
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
+        finish();
     }
 
-    private void getReciverEmail() {
-        refemail=FirebaseDatabase.getInstance().getReference("Emails");
-        if(dep_of_pro_str.equals("Electricity")){
-            refemail.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    ReceiverEmail=snapshot.child(dep_of_pro_str).child("email").getValue(String.class);
-                }
+//    private void submitComplaint() {
+//
+//        dbRef = FirebaseDatabase.getInstance().getReference().child("complaints").child(dep_of_pro_str);
+//        final String uniqueKey = dbRef.push().getKey();
+//
+//        //complainted_by_name_str = complainted_by_name.getText().toString();
+//        complainted_by_mob_str = complainted_by_mob.getText().toString();
+//        if(complaint_txt.equals("Others")){
+//            complaint_txt=other_com.getText().toString();
+//        }
+//
+//        Calendar calForDate = Calendar.getInstance();
+//        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yy");
+//        String date = currentDate.format(calForDate.getTime());
+//
+//        Calendar calForTime = Calendar.getInstance();
+//        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+//        String time = currentTime.format(calForTime.getTime());
+//
+//
+//        Complaint_details complaint_details = new Complaint_details("null", complainted_by_mob_str,
+//                "null", complaint_txt, sn_str,
+//                make_str, model_str, procurement_str,
+//                powerRating_str, wperiod_str, wexpiry_str, ins_by_str, ins_date_str, mob_str, date, time, uniqueKey, s,
+//                status,dep_of_pro_str,uref,location_str,rating_str,FeedBack_str);
+//
+//        //refDash= FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getUid());
+//
+//
+//        dbRef.child(uniqueKey).setValue(complaint_details).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void unused) {
+//                //sendemail();
+//                Toast.makeText(complaint_page.this, "Complaint Registered Successfully", Toast.LENGTH_SHORT).show();
+//                refDash.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        Intent intent=new Intent(complaint_page.this, ScannerPage.class);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        startActivity(intent);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(complaint_page.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//    }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }else if(dep_of_pro_str.equals("Plumber")) {
-            refemail.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    ReceiverEmail = snapshot.child(dep_of_pro_str).child("email").getValue(String.class);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }else if(dep_of_pro_str.equals("Network")){
-            refemail.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    ReceiverEmail=snapshot.child(dep_of_pro_str).child("email").getValue(String.class);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }else if(dep_of_pro_str.equals("Carpenter")){
-            refemail.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    ReceiverEmail=snapshot.child(dep_of_pro_str).child("email").getValue(String.class);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }else if(dep_of_pro_str.equals("Painting")){
-            refemail.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    ReceiverEmail=snapshot.child(dep_of_pro_str).child("email").getValue(String.class);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
-        else{
-            refemail.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    ReceiverEmail=snapshot.child("other").child("email").getValue(String.class);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
-
-        }
-    }
+    //private void getReciverEmail() {
+//        refemail=FirebaseDatabase.getInstance().getReference("Emails");
+//        if(dep_of_pro_str.equals("Electricity")){
+//            refemail.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    ReceiverEmail=snapshot.child(dep_of_pro_str).child("email").getValue(String.class);
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+//        }else if(dep_of_pro_str.equals("Plumber")) {
+//            refemail.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    ReceiverEmail = snapshot.child(dep_of_pro_str).child("email").getValue(String.class);
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+//        }else if(dep_of_pro_str.equals("Network")){
+//            refemail.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    ReceiverEmail=snapshot.child(dep_of_pro_str).child("email").getValue(String.class);
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+//        }else if(dep_of_pro_str.equals("Carpenter")){
+//            refemail.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    ReceiverEmail=snapshot.child(dep_of_pro_str).child("email").getValue(String.class);
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+//        }else if(dep_of_pro_str.equals("Painting")){
+//            refemail.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    ReceiverEmail=snapshot.child(dep_of_pro_str).child("email").getValue(String.class);
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+//        }
+//        else{
+//            refemail.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    ReceiverEmail=snapshot.child("other").child("email").getValue(String.class);
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+//
+//
+//        }
+//    }
 
 //    private void sendemail() {
 //        SendMail mail=new SendMail(Senderemail,
